@@ -1,39 +1,67 @@
+import type { Route } from './+types/root';
+import './app.css';
+import { Button, Toaster } from './components/ui';
+import { PAGE_ROUTES } from './constants/routes';
+import { AuthProvider, ReactQueryProvider, ThemeProvider } from './providers';
+import { ArrowLeftIcon, HouseIcon } from 'lucide-react';
+import { CookiesProvider } from 'react-cookie';
 import {
-  isRouteErrorResponse,
+  Link,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "react-router";
-
-import type { Route } from "./+types/root";
-import "./app.css";
+  isRouteErrorResponse,
+  useNavigate,
+} from 'react-router';
 
 export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
   {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
+    rel: 'preconnect',
+    href: 'https://fonts.gstatic.com',
+    crossOrigin: 'anonymous',
   },
   {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+    rel: 'stylesheet',
+    href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
   },
 ];
 
+export function meta() {
+  return [
+    { title: 'Localization Platform' },
+    {
+      name: 'description',
+      content: 'A platform to manage localization projects efficiently.',
+    },
+  ];
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
+      <body className="antialiased">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ReactQueryProvider>
+            <CookiesProvider defaultSetOptions={{ path: '/' }}>
+              <AuthProvider>{children}</AuthProvider>
+            </CookiesProvider>
+          </ReactQueryProvider>
+          <Toaster richColors position="top-right" />
+        </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -46,27 +74,47 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
+  const navigate = useNavigate();
+
+  let message = 'Oops!';
+  let details = 'An unexpected error occurred.';
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    message = error.status === 404 ? '404' : 'Error';
     details =
       error.status === 404
-        ? "The requested page could not be found."
+        ? 'The requested page could not be found.'
         : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;
   }
 
+  const handleBack = () => {
+    void navigate(-1);
+  };
+
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
+    <main className="container mx-auto flex min-h-svh w-full flex-col items-center justify-center gap-4">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold">{message}</h1>
+        <p>{details}</p>
+      </div>
+      <div className="flex gap-2">
+        <Button variant="outline" onClick={handleBack}>
+          <ArrowLeftIcon />
+          <span>Back</span>
+        </Button>
+        <Button asChild>
+          <Link to={PAGE_ROUTES.DASHBOARD}>
+            <HouseIcon />
+            <span>Dashboard</span>
+          </Link>
+        </Button>
+      </div>
       {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
+        <pre className="bg-muted text-muted-foreground w-full overflow-x-auto rounded-md px-4 py-3">
           <code>{stack}</code>
         </pre>
       )}
