@@ -1,5 +1,3 @@
-'use client';
-
 import { TranslationGroupItem } from './TranslationGroupItem';
 import { Skeleton } from '~/components/ui';
 import { useGetAllTranslationsByProject } from '~/features/projects';

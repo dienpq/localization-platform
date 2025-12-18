@@ -1,5 +1,3 @@
-'use client';
-
 import { CreateTranslationGroup } from './CreateTranslationGroup';
 import { TranslationDownload } from './TranslationDownload';
 import { TranslationGroupList } from './TranslationGroupList';

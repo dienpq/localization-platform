@@ -1,5 +1,3 @@
-'use client';
-
 import { InviteMemberDialog } from './InviteMemberDialog';
 import { ProjectDialog } from './ProjectDialog';
 import { WaitingProjectDialog } from './WaitingProjectDialog';

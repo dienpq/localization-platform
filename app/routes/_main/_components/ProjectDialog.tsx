@@ -1,5 +1,3 @@
-'use client';
-
 import { ProjectForm } from './ProjectForm';
 import { useState } from 'react';
 import {
@@ -12,7 +10,7 @@ import {
   DialogTitle,
   ScrollArea,
 } from '~/components/ui';
-import { GetAllProjectsResponse } from '~/features/projects';
+import { type GetAllProjectsResponse } from '~/features/projects';
 
 interface ProjectDialogProps {
   open: boolean;

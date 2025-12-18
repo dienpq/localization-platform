@@ -1,5 +1,3 @@
-'use client';
-
 import { useStore } from '@tanstack/react-form';
 import { useEffect } from 'react';
 import { useAppForm } from '~/components/form';

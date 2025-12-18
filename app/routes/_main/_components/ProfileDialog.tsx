@@ -1,5 +1,3 @@
-'use client';
-
 import { ProfileForm } from './ProfileForm';
 import { useState } from 'react';
 import {

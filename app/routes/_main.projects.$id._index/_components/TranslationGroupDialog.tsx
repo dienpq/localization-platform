@@ -1,5 +1,3 @@
-'use client';
-
 import { TranslationGroupForm } from './TraslationGroupForm';
 import { useState } from 'react';
 import {
@@ -12,7 +10,7 @@ import {
   DialogTitle,
   ScrollArea,
 } from '~/components/ui';
-import { GetAllTranslationsByProjectResponse } from '~/features/projects';
+import { type GetAllTranslationsByProjectResponse } from '~/features/projects';
 
 interface TranslationGroupDialogProps {
   open: boolean;

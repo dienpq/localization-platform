@@ -3,7 +3,7 @@ import { PlusIcon, SearchIcon } from 'lucide-react';
 import { useAppForm } from '~/components/form';
 import { FieldGroup, InputGroupButton } from '~/components/ui';
 import {
-  MemberSchema,
+  type MemberSchema,
   memberSchema,
   useAddMemberByProject,
 } from '~/features/projects';

@@ -1,5 +1,3 @@
-'use client';
-
 import { useStore } from '@tanstack/react-form';
 import { PlusIcon, Trash2Icon } from 'lucide-react';
 import { useEffect } from 'react';

@@ -1,5 +1,3 @@
-'use client';
-
 import GoogleIcon from '~/assets/icons/google.svg';
 import { Button } from '~/components/ui';
 import { useAuth } from '~/providers';

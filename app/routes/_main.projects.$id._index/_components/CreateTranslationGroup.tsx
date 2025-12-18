@@ -1,5 +1,3 @@
-'use client';
-
 import { TranslationGroupDialog } from './TranslationGroupDialog';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';

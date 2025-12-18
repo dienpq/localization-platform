@@ -1,5 +1,3 @@
-'use client';
-
 import { NavMain } from './NavMain';
 import { NavProject } from './NavProject';
 import { NavUser } from './NavUser';

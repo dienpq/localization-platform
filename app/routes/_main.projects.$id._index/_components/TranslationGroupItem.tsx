@@ -1,5 +1,3 @@
-'use client';
-
 import { TranslationForm } from './TranslationForm';
 import { TranslationGroupDialog } from './TranslationGroupDialog';
 import {

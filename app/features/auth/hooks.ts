@@ -13,7 +13,7 @@ import type {
   SignInResponse,
 } from './types';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { queryClient } from '~/lib/query-client';
 
