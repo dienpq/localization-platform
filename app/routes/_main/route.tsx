@@ -1,4 +1,5 @@
 import { AppSidebar, BreadcrumbHeader } from './_components';
+import { Outlet } from 'react-router';
 import { ThemeSwitch } from '~/components/common';
 import {
   Separator,
@@ -8,11 +9,7 @@ import {
 } from '~/components/ui';
 import { BreadcrumbProvider } from '~/providers';
 
-export default function MainLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function MainLayout() {
   return (
     <BreadcrumbProvider>
       <SidebarProvider>
@@ -32,7 +29,7 @@ export default function MainLayout({
             </div>
           </header>
           <main className="mt-16 p-4 group-has-data-[collapsible=icon]/sidebar-wrapper:mt-12">
-            {children}
+            <Outlet />
           </main>
         </SidebarInset>
       </SidebarProvider>

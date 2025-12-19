@@ -1,4 +1,4 @@
-import GoogleIcon from '~/assets/icons/google.svg';
+import GoogleIcon from '~/assets/icons/google.svg?react';
 import { Button } from '~/components/ui';
 import { useAuth } from '~/providers';
 

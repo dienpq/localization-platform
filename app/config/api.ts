@@ -1,14 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/prefer-promise-reject-errors */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import axios from 'axios';
+import axios, { AxiosError, type AxiosRequestConfig } from 'axios';
 import { Cookies } from 'react-cookie';
 import { ENVIRONMENTS } from '~/config/enviroments';
 import { PAGE_ROUTES } from '~/constants/routes';
 import { AUTH_ENDPOINTS, type RefreshTokenResponse } from '~/features/auth';
+
+interface AxiosRequestConfigWithRetry extends AxiosRequestConfig {
+  _retry?: boolean;
+}
+
+interface FailedQueueItem {
+  resolve: (token: string | null) => void;
+  reject: (error: Error) => void;
+}
 
 const cookies = new Cookies();
 
@@ -22,12 +25,9 @@ const api = axios.create({
 });
 
 let isRefreshing = false;
-let failedQueue: {
-  resolve: (token: string | null) => void;
-  reject: (error: any) => void;
-}[] = [];
+let failedQueue: FailedQueueItem[] = [];
 
-const processQueue = (error: any, token: string | null = null) => {
+const processQueue = (error: Error | null, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
@@ -38,23 +38,27 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
+function toError(err: unknown): Error {
+  return err instanceof Error ? err : new Error('Unknown error');
+}
+
 api.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
-      const token = cookies.get('accessToken');
+      const token = cookies.get('accessToken') as string | undefined;
       if (token && !config.headers.Authorization) {
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
     return config;
   },
-  (error) => Promise.reject(error),
+  (error) => Promise.reject(toError(error)),
 );
 
 api.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+  async (error: AxiosError) => {
+    const originalRequest = error.config as AxiosRequestConfigWithRetry;
 
     if (
       error.response?.status === 401 &&
@@ -62,18 +66,18 @@ api.interceptors.response.use(
       typeof window !== 'undefined'
     ) {
       if (window.location.pathname === PAGE_ROUTES.AUTH.LOGIN) {
-        return Promise.reject(error);
+        return Promise.reject(toError(error));
       }
 
       if (isRefreshing) {
-        return new Promise((resolve, reject) => {
+        return new Promise<string | null>((resolve, reject) => {
           failedQueue.push({ resolve, reject });
-        })
-          .then((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-            return api(originalRequest);
-          })
-          .catch((err: unknown) => Promise.reject(err));
+        }).then((token) => {
+          if (!token) throw new Error('No access token');
+          originalRequest.headers ??= {};
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return api(originalRequest);
+        });
       }
 
       originalRequest._retry = true;
@@ -83,34 +87,37 @@ api.interceptors.response.use(
         const refreshResponse = await axios.post<RefreshTokenResponse>(
           `${ENVIRONMENTS.API_URL}${AUTH_ENDPOINTS.REFRESH_TOKEN}`,
           {
-            refreshToken: cookies.get('refreshToken'),
+            refreshToken: cookies.get('refreshToken') as string | undefined,
           },
         );
 
-        const { accessToken: newAccessToken } = refreshResponse.data;
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        const newAccessToken = refreshResponse.data.accessToken;
+
         cookies.set('accessToken', newAccessToken);
 
         processQueue(null, newAccessToken);
         isRefreshing = false;
 
+        originalRequest.headers ??= {};
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
         return await api(originalRequest);
-      } catch (refreshError) {
-        processQueue(refreshError, null);
+      } catch (refreshErr) {
+        const safeError = toError(refreshErr);
+
+        processQueue(safeError, null);
         isRefreshing = false;
 
         cookies.remove('accessToken');
         cookies.remove('refreshToken');
 
-        if (window.location.pathname !== PAGE_ROUTES.AUTH.LOGIN) {
-          window.location.href = PAGE_ROUTES.AUTH.LOGIN;
-        }
+        window.location.href = PAGE_ROUTES.AUTH.LOGIN;
 
-        return Promise.reject(refreshError);
+        return Promise.reject(safeError);
       }
     }
 
-    return Promise.reject(error);
+    return Promise.reject(toError(error));
   },
 );
 

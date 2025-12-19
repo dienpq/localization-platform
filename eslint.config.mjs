@@ -9,18 +9,14 @@ const eslintConfig = defineConfig([
   tseslint.configs.stylisticTypeChecked,
   prettier,
   {
-    ignores: ['dist', 'build', '.react-router'],
+    ignores: ['build', '.react-router', 'eslint.config.mjs'],
   },
   {
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        projectService: {
-          allowDefaultProject: ['eslint.config.mjs'],
-          defaultProject: 'tsconfig.json',
-        },
+        projectService: true,
         tsconfigRootDir: import.meta.dirname,
-        sourceType: 'module',
       },
     },
     rules: {

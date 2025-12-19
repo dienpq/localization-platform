@@ -1,5 +1,6 @@
 import { SignInForm } from './_components';
 import { CircleAlertIcon } from 'lucide-react';
+import { useSearchParams } from 'react-router';
 import {
   Alert,
   AlertDescription,
@@ -11,19 +12,16 @@ import {
   CardTitle,
 } from '~/components/ui';
 
-export default async function SignInPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ error?: string }>;
-}) {
-  const { error } = await searchParams;
+export default function SignInPage() {
+  const [searchParams] = useSearchParams();
+  const error = searchParams.get('error');
 
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="text-center">
-        <CardTitle className="text-xl">Admin Login</CardTitle>
+        <CardTitle className="text-xl">Sign In</CardTitle>
         <CardDescription>
-          Sign in to your admin account to manage the website.
+          Sign in to your admin account to manage the platform.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -40,7 +38,6 @@ export default async function SignInPage({
             </AlertDescription>
           </Alert>
         )}
-
         <SignInForm />
       </CardContent>
     </Card>
