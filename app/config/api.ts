@@ -65,7 +65,7 @@ api.interceptors.response.use(
       !originalRequest._retry &&
       typeof window !== 'undefined'
     ) {
-      if (window.location.pathname === PAGE_ROUTES.AUTH.LOGIN) {
+      if (window.location.pathname === PAGE_ROUTES.AUTH.SIGN_IN) {
         return Promise.reject(toError(error));
       }
 
@@ -111,7 +111,7 @@ api.interceptors.response.use(
         cookies.remove('accessToken');
         cookies.remove('refreshToken');
 
-        window.location.href = PAGE_ROUTES.AUTH.LOGIN;
+        window.location.href = PAGE_ROUTES.AUTH.SIGN_IN;
 
         return Promise.reject(safeError);
       }

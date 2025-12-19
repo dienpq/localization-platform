@@ -1,6 +1,8 @@
 import { SignInForm } from './_components';
 import { CircleAlertIcon } from 'lucide-react';
-import { useSearchParams } from 'react-router';
+import { useEffect } from 'react';
+import { useCookies } from 'react-cookie';
+import { useNavigate, useSearchParams } from 'react-router';
 import {
   Alert,
   AlertDescription,
@@ -11,10 +13,24 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui';
+import { PAGE_ROUTES } from '~/constants/routes';
 
 export default function SignInPage() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [, setCookie] = useCookies(['accessToken', 'refreshToken']);
+
   const error = searchParams.get('error');
+  const accessToken = searchParams.get('access_token');
+  const refreshToken = searchParams.get('refresh_token');
+
+  useEffect(() => {
+    if (accessToken && refreshToken) {
+      setCookie('accessToken', accessToken);
+      setCookie('refreshToken', refreshToken);
+      void navigate(PAGE_ROUTES.DASHBOARD, { replace: true });
+    }
+  }, [accessToken, refreshToken]);
 
   return (
     <Card className="w-full max-w-sm">
@@ -28,13 +44,9 @@ export default function SignInPage() {
         {error && (
           <Alert variant="destructive" className="mb-4">
             <CircleAlertIcon />
-            <AlertTitle>
-              {error === 'AccessDenied' ? 'Access Denied' : 'Error'}
-            </AlertTitle>
+            <AlertTitle>Error</AlertTitle>
             <AlertDescription>
-              {error === 'AccessDenied'
-                ? 'You do not have permission to access this resource.'
-                : 'An unexpected error occurred during login. Please try again.'}
+              {error || 'An unexpected error occurred during sign-in.'}
             </AlertDescription>
           </Alert>
         )}

@@ -1,6 +1,8 @@
 import { ProfileDialog } from './ProfileDialog';
 import { BadgeCheck, ChevronsUpDown, LogOut } from 'lucide-react';
 import { useState } from 'react';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router';
 import {
   Avatar,
   AvatarFallback,
@@ -17,17 +19,30 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '~/components/ui';
-import { useGetProfile } from '~/features/auth';
+import { PAGE_ROUTES } from '~/constants/routes';
+import { useSignOut } from '~/features/auth';
+import { useGetProfile } from '~/features/user';
 import { getAvatarInitials } from '~/lib/utils';
-import { useAuth } from '~/providers';
 
 export const NavUser = () => {
   const [open, setOpen] = useState<boolean>(false);
 
   const { isMobile } = useSidebar();
-  const { signOut } = useAuth();
+  const navigate = useNavigate();
+  const [, , removeCookie] = useCookies(['accessToken', 'refreshToken']);
 
   const { data: profile } = useGetProfile();
+  const { mutate: signOut } = useSignOut();
+
+  const handleSignOut = () => {
+    signOut(undefined, {
+      onSettled: () => {
+        removeCookie('accessToken');
+        removeCookie('refreshToken');
+        void navigate(PAGE_ROUTES.AUTH.SIGN_IN);
+      },
+    });
+  };
 
   return (
     <>
@@ -92,11 +107,7 @@ export const NavUser = () => {
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => {
-                  signOut();
-                }}
-              >
+              <DropdownMenuItem onClick={handleSignOut}>
                 <LogOut />
                 Logout
               </DropdownMenuItem>

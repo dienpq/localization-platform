@@ -2,7 +2,7 @@ import type { Route } from './+types/root';
 import './app.css';
 import { Button, Toaster } from './components/ui';
 import { PAGE_ROUTES } from './constants/routes';
-import { AuthProvider, ReactQueryProvider, ThemeProvider } from './providers';
+import { ReactQueryProvider, ThemeProvider } from './providers';
 import { ArrowLeftIcon, HouseIcon } from 'lucide-react';
 import { CookiesProvider } from 'react-cookie';
 import {
@@ -57,7 +57,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         >
           <ReactQueryProvider>
             <CookiesProvider defaultSetOptions={{ path: '/' }}>
-              <AuthProvider>{children}</AuthProvider>
+              {children}
             </CookiesProvider>
           </ReactQueryProvider>
           <Toaster richColors position="top-right" />

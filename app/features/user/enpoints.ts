@@ -1,1 +1,6 @@
-export const AUTH_ENDPOINTS = {};
+export const USER_ENDPOINTS = {
+  PROFILE: {
+    GET: '/users/profile',
+    UPDATE: '/users/profile',
+  },
+};

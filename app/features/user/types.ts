@@ -1,3 +1,6 @@
+import type { profileSchema } from './schema';
+import type z from 'zod';
+
 export interface User {
   id: string;
   name: string;
@@ -6,3 +9,6 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
+
+export type ProfileSchema = z.infer<typeof profileSchema>;
+export type GetProfileResponse = User;

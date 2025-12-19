@@ -10,7 +10,7 @@ import {
   DialogTitle,
   ScrollArea,
 } from '~/components/ui';
-import { type GetProfileResponse } from '~/features/auth';
+import type { GetProfileResponse } from '~/features/user';
 
 interface ProfileDialogProps {
   profile: GetProfileResponse;

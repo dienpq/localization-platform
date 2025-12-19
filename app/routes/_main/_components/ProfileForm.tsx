@@ -7,7 +7,7 @@ import {
   type ProfileSchema,
   profileSchema,
   useUpdateProfile,
-} from '~/features/auth';
+} from '~/features/user';
 
 interface ProfileFormProps {
   profile: GetProfileResponse;

@@ -7,6 +7,6 @@ export const PAGE_ROUTES = {
   },
 
   AUTH: {
-    LOGIN: '/login',
+    SIGN_IN: '/sign-in',
   },
 };
