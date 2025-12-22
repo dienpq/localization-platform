@@ -1,10 +1,10 @@
 export enum ProjectMemberStatus {
-  WAITING = 'waiting',
-  ACCEPTED = 'accepted',
-  REJECTED = 'rejected',
+  WAITING = 'WAITING',
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED',
 }
 
 export enum ProjectMemberRole {
-  ADMIN = 'admin',
-  MEMBER = 'member',
+  ADMIN = 'ADMIN',
+  MEMBER = 'MEMBER',
 }

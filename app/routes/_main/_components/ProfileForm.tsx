@@ -23,7 +23,7 @@ interface ProfileFormProps {
 }
 
 export function ProfileForm({ profile, onStateChange }: ProfileFormProps) {
-  const { mutate: updateProfile } = useUpdateProfile();
+  const { mutateAsync: updateProfile } = useUpdateProfile();
 
   const form = useAppForm({
     defaultValues: {
@@ -34,8 +34,8 @@ export function ProfileForm({ profile, onStateChange }: ProfileFormProps) {
       onChange: profileSchema,
       onSubmit: profileSchema,
     },
-    onSubmit: ({ value }) => {
-      updateProfile(value);
+    onSubmit: async ({ value }) => {
+      await updateProfile(value);
     },
   });
 

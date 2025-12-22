@@ -24,8 +24,8 @@ interface ProjectFormProps {
 }
 
 export const ProjectForm = ({ project, onStateChange }: ProjectFormProps) => {
-  const { mutate: createProject } = useCreateProject();
-  const { mutate: updateProject } = useUpdateProject(project?.id ?? '');
+  const { mutateAsync: createProject } = useCreateProject();
+  const { mutateAsync: updateProject } = useUpdateProject(project?.id ?? '');
 
   const form = useAppForm({
     defaultValues: {
@@ -36,15 +36,15 @@ export const ProjectForm = ({ project, onStateChange }: ProjectFormProps) => {
       onChange: projectSchema,
       onSubmit: projectSchema,
     },
-    onSubmit: ({ value }) => {
+    onSubmit: async ({ value }) => {
       if (project) {
-        updateProject(value, {
+        await updateProject(value, {
           onSuccess: () => {
             form.reset();
           },
         });
       } else {
-        createProject(value, {
+        await createProject(value, {
           onSuccess: () => {
             form.reset();
           },

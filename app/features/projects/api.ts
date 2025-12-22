@@ -41,7 +41,7 @@ export async function updateProject(
   projectId: string,
   data: ProjectSchema,
 ): Promise<unknown> {
-  const response = await api.put<unknown>(
+  const response = await api.patch<unknown>(
     PROJECT_ENDPOINTS.UPDATE(projectId),
     data,
   );
@@ -64,12 +64,12 @@ export async function getAllMembersByProject(
   return response.data;
 }
 
-export async function addMemberByProject(
+export async function inviteMemberByProject(
   projectId: string,
   data: MemberSchema,
 ): Promise<unknown> {
   const response = await api.post<unknown>(
-    PROJECT_ENDPOINTS.MEMBERS.ADD(projectId),
+    PROJECT_ENDPOINTS.MEMBERS.INVITE(projectId),
     data,
   );
   return response.data;
@@ -106,7 +106,7 @@ export async function updateTranslationByProject(
   translationId: string,
   data: TranslationSchema,
 ): Promise<void> {
-  await api.put(
+  await api.patch(
     PROJECT_ENDPOINTS.TRANSLATIONS.UPDATE(projectId, translationId),
     data,
   );

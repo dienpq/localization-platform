@@ -35,7 +35,7 @@ import {
   useSidebar,
 } from '~/components/ui';
 import { PAGE_ROUTES } from '~/constants/routes';
-import { ProjectMemberRole } from '~/enum/project-member';
+import { ProjectMemberRole, ProjectMemberStatus } from '~/enum/project-member';
 import {
   type GetAllProjectsResponse,
   useDeleteProject,
@@ -45,7 +45,7 @@ import {
 import { getAvatarInitials } from '~/lib/utils';
 
 export const NavProject = () => {
-  const { id: projectId } = useParams();
+  const { id: projectId } = useParams<{ id: string }>();
   const { isMobile } = useSidebar();
 
   const [open, setOpen] = useState<boolean>(false);
@@ -59,7 +59,7 @@ export const NavProject = () => {
 
   const { data: projectData, isPending } = useGetAllProjects();
   const { data: waitingProjectData } = useGetAllProjects({
-    status: 'WAITING',
+    status: ProjectMemberStatus.WAITING,
   });
   const { mutateAsync: deleteProject } = useDeleteProject();
   const { mutateAsync: leaveProject } = useLeaveProject();

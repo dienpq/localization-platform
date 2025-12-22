@@ -1,4 +1,5 @@
 import { MemberItem } from './MemberItem';
+import { MemberListEmpty } from './MemberListEmpty';
 import { ItemGroup, Skeleton } from '~/components/ui';
 import { useGetAllMembersByProject } from '~/features/projects';
 
@@ -13,12 +14,14 @@ export const MemberList = ({ projectId }: MemberListProps) => {
     <>
       {isPending ? (
         <Skeleton className="h-[78.25px] w-full" />
-      ) : (
+      ) : memberData?.data.length ? (
         <ItemGroup className="gap-4">
-          {memberData?.data.map((member) => (
+          {memberData.data.map((member) => (
             <MemberItem key={member.id} member={member} projectId={projectId} />
           ))}
         </ItemGroup>
+      ) : (
+        <MemberListEmpty />
       )}
     </>
   );

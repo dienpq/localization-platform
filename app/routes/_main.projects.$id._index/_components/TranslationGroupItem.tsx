@@ -51,8 +51,6 @@ export const TranslationGroupItem = ({
   const handleDeleteGroup = () => {
     toast.promise(deleteTranslationGroup(id), {
       loading: 'Deleting translation group...',
-      success: 'Translation group deleted successfully',
-      error: 'Failed to delete translation group',
     });
   };
 

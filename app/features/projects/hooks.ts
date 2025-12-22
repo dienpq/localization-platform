@@ -1,5 +1,4 @@
 import {
-  addMemberByProject,
   approveProject,
   createProject,
   createTranslationByProject,
@@ -9,6 +8,7 @@ import {
   getAllProjects,
   getAllTranslationsByProject,
   getProject,
+  inviteMemberByProject,
   leaveProject,
   rejectProject,
   removeMemberByProject,
@@ -83,11 +83,11 @@ export const useDeleteProject = () => {
   });
 };
 
-export const useAddMemberByProject = (projectId: string) => {
+export const useInviteMemberByProject = (projectId: string) => {
   return useMutation<unknown, AxiosError, MemberSchema>({
-    mutationFn: (data: MemberSchema) => addMemberByProject(projectId, data),
+    mutationFn: (data: MemberSchema) => inviteMemberByProject(projectId, data),
     onSuccess: () => {
-      toast.success('Member added successfully');
+      toast.success('Member invited successfully');
       void queryClient.invalidateQueries({
         queryKey: ['projects', projectId, 'members'],
       });

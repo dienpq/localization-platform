@@ -9,12 +9,13 @@ import {
   InputGroupInput,
   Separator,
 } from '~/components/ui';
+import type { GetProjectResponse } from '~/features/projects';
 
 interface ProjectProps {
-  projectId: string;
+  project: GetProjectResponse;
 }
 
-export const Project = ({ projectId }: ProjectProps) => {
+export const Project = ({ project }: ProjectProps) => {
   const [inputSearch, setInputSearch] = useState('');
 
   return (
@@ -33,12 +34,12 @@ export const Project = ({ projectId }: ProjectProps) => {
           </InputGroupAddon>
         </InputGroup>
         <div className="flex items-center gap-4">
-          <TranslationDownload projectId={projectId} />
-          <CreateTranslationGroup projectId={projectId} />
+          <TranslationDownload projectId={project.id} />
+          <CreateTranslationGroup projectId={project.id} />
         </div>
       </div>
       <Separator className="my-4" />
-      <TranslationGroupList projectId={projectId} search={inputSearch} />
+      <TranslationGroupList projectId={project.id} search={inputSearch} />
     </>
   );
 };

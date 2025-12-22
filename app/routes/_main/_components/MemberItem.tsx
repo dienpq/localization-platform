@@ -32,11 +32,11 @@ export const MemberItem = ({ projectId, member }: MemberItemProps) => {
     project: { status },
   } = member;
 
-  const { mutate: deleteMember, isPending } =
+  const { mutateAsync: deleteMember, isPending } =
     useRemoveMemberByProject(projectId);
 
-  const handleDeleteMember = () => {
-    deleteMember(id);
+  const handleDeleteMember = async () => {
+    await deleteMember(id);
   };
 
   return (
@@ -60,7 +60,9 @@ export const MemberItem = ({ projectId, member }: MemberItemProps) => {
         <Button
           variant="destructive"
           size="icon-sm"
-          onClick={handleDeleteMember}
+          onClick={() => {
+            void handleDeleteMember();
+          }}
           isLoading={isPending}
         >
           <Trash2Icon />

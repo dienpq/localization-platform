@@ -4,13 +4,14 @@ export const PROJECT_ENDPOINTS = {
   CREATE: '/projects',
   UPDATE: (projectId: string) => `/projects/${projectId}`,
   DELETE: (projectId: string) => `/projects/${projectId}`,
+
   REJECT: (projectId: string) => `/projects/${projectId}/reject`,
   APPROVE: (projectId: string) => `/projects/${projectId}/approve`,
   LEAVE: (projectId: string) => `/projects/${projectId}/leave`,
 
   MEMBERS: {
     GET_ALL: (projectId: string) => `/projects/${projectId}/members`,
-    ADD: (projectId: string) => `/projects/${projectId}/members`,
+    INVITE: (projectId: string) => `/projects/${projectId}/members`,
     REMOVE: (projectId: string, memberId: string) =>
       `/projects/${projectId}/members/${memberId}`,
   },

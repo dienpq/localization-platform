@@ -10,5 +10,5 @@ export async function getProfile(): Promise<GetProfileResponse> {
 }
 
 export async function updateProfile(data: ProfileSchema): Promise<void> {
-  await api.put(USER_ENDPOINTS.PROFILE.UPDATE, data);
+  await api.patch(USER_ENDPOINTS.PROFILE.UPDATE, data);
 }

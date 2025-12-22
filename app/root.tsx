@@ -99,9 +99,9 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     <main className="container mx-auto flex min-h-svh w-full flex-col items-center justify-center gap-4">
       <div className="text-center">
         <h1 className="text-2xl font-bold">{message}</h1>
-        <p>{details}</p>
+        <p className="text-muted-foreground mt-2">{details}</p>
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-4">
         <Button variant="outline" onClick={handleBack}>
           <ArrowLeftIcon />
           <span>Back</span>

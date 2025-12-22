@@ -35,9 +35,9 @@ export const TranslationGroupForm = ({
   const { data: translationParentData } =
     useGetAllTranslationsByProject(projectId);
 
-  const { mutate: createTranslationGroup } =
+  const { mutateAsync: createTranslationGroup } =
     useCreateTranslationByProject(projectId);
-  const { mutate: updateTranslationGroup } = useUpdateTranslationByProject(
+  const { mutateAsync: updateTranslationGroup } = useUpdateTranslationByProject(
     projectId,
     translationGroup?.id ?? '',
   );
@@ -53,15 +53,15 @@ export const TranslationGroupForm = ({
       onChange: translationSchema,
       onSubmit: translationSchema,
     },
-    onSubmit: ({ value }) => {
+    onSubmit: async ({ value }) => {
       if (translationGroup) {
-        updateTranslationGroup(value, {
+        await updateTranslationGroup(value, {
           onSuccess: () => {
             form.reset();
           },
         });
       } else {
-        createTranslationGroup(value, {
+        await createTranslationGroup(value, {
           onSuccess: () => {
             form.reset();
           },

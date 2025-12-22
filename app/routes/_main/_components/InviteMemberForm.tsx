@@ -5,7 +5,7 @@ import { FieldGroup, InputGroupButton } from '~/components/ui';
 import {
   type MemberSchema,
   memberSchema,
-  useAddMemberByProject,
+  useInviteMemberByProject,
 } from '~/features/projects';
 
 interface InviteMemberFormProps {
@@ -13,7 +13,7 @@ interface InviteMemberFormProps {
 }
 
 export const InviteMemberForm = ({ projectId }: InviteMemberFormProps) => {
-  const { mutate: inviteMember } = useAddMemberByProject(projectId);
+  const { mutateAsync: inviteMember } = useInviteMemberByProject(projectId);
 
   const form = useAppForm({
     defaultValues: {
@@ -23,8 +23,8 @@ export const InviteMemberForm = ({ projectId }: InviteMemberFormProps) => {
       onChange: memberSchema,
       onSubmit: memberSchema,
     },
-    onSubmit: ({ value }) => {
-      inviteMember(value, {
+    onSubmit: async ({ value }) => {
+      await inviteMember(value, {
         onSuccess: () => {
           form.reset();
         },

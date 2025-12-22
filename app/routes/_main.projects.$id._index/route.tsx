@@ -1,21 +1,30 @@
 import { Project } from './_components';
+import { useParams } from 'react-router';
 import { BreadcrumbManager } from '~/components/common';
+import { useGetProject } from '~/features/projects';
 
-export default async function ProjectPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+export default function ProjectPage() {
+  const { id } = useParams<{ id: string }>();
+
+  const { data, error } = useGetProject(id ?? '');
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data) {
+    return null;
+  }
 
   return (
     <>
       <BreadcrumbManager
         data={{
-          title: `Project ${id}`,
+          title: data.name,
         }}
       />
-      <Project projectId={id} />
+
+      <Project project={data} />
     </>
   );
 }
